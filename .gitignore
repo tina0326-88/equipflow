@@ -1,0 +1,96 @@
+
+# OS / Editor
+
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
+
+
+# Env files（安全敏感）
+
+.env
+.env.*
+!.env.example
+
+
+# Docker
+
+docker-compose.override.yml
+
+
+# Backend (Laravel)
+
+
+backend/vendor/
+backend/node_modules/
+
+# Laravel storage & cache
+backend/storage/*.key
+backend/storage/app/*
+backend/storage/framework/cache/*
+backend/storage/framework/sessions/*
+backend/storage/framework/views/*
+backend/bootstrap/cache/*
+
+# Laravel logs
+backend/storage/logs/*.log
+
+# Laravel specific
+backend/.phpunit.result.cache
+backend/.php_cs.cache
+backend/phpunit.xml
+
+# Composer
+backend/vendor/
+
+
+# Frontend (Vue 3)
+
+
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+
+# Vue / Vite / build cache
+frontend/.vite/
+frontend/.cache/
+
+# Logs
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/pnpm-debug.log*
+
+
+# Package managers
+
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Build output (safety)
+
+dist/
+build/
+
+
+# Testing / coverage
+
+coverage/
+
+
+# Docker volumes / runtime data
+
+*.pid
+*.seed
+*.pid.lock
+
+
+# Optional backups
+
+*.bak
+*.swp
