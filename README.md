@@ -63,11 +63,11 @@
 
 ## 系統架構圖
 
-![mermaid-diagram](https://hackmd.io/_uploads/rJcOG1SMMg.png)
+<img width="663" height="1975" alt="EquipFlow-2" src="https://github.com/user-attachments/assets/9af4b92c-f77a-47b1-8fb4-dcccd7ddbf0b" />
 
 ## 資料模型
 
-![EquipFlow](https://hackmd.io/_uploads/SyTkLkSzze.png)
+<img width="1085" height="806" alt="EquipFlow" src="https://github.com/user-attachments/assets/145329fc-bf85-4459-8705-c09c5c6c5040" />
 
 ### Users（使用者）
 
