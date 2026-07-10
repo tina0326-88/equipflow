@@ -57,52 +57,11 @@
 
     <!-- 報修列表 -->
     <v-card class="repair-card" elevation="2">
-      <v-data-table
-        :headers="headers"
-        :items="filteredRepairs"
+      <RepairTable
+        :repairs="filteredRepairs"
         :loading="repairStore.loading"
-        loading-text="載入中..."
-        no-data-text="目前沒有報修案件"
-        items-per-page-text="每頁顯示"
-        hover
-      >
-        <!-- 狀態欄 -->
-        <template #item.status="{ item }">
-          <v-chip :color="getStatusColor(item.status)" size="small" label>
-            {{ getStatusText(item.status) }}
-          </v-chip>
-        </template>
-
-        <!-- 優先等級欄 -->
-        <template #item.priority="{ item }">
-          <v-chip
-            :color="getPriorityColor(item.priority)"
-            size="small"
-            variant="outlined"
-          >
-            {{ getPriorityText(item.priority) }}
-          </v-chip>
-        </template>
-
-        <!-- 操作欄 -->
-        <template #item.actions="{ item }">
-          <v-btn
-            icon="mdi-eye-outline"
-            size="small"
-            variant="text"
-            color="primary"
-            class="mr-1"
-            :to="`/repairs/${item.id}`"
-          />
-          <v-btn
-            icon="mdi-delete-outline"
-            size="small"
-            variant="text"
-            color="error"
-            @click="confirmDelete(item)"
-          />
-        </template>
-      </v-data-table>
+        @delete="confirmDelete"
+      />
     </v-card>
 
     <!-- 刪除確認 Dialog -->
@@ -128,6 +87,7 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import { useRepairStore } from "@/stores/repair";
+import RepairTable from "@/components/RepairTable.vue";
 
 const repairStore = useRepairStore();
 

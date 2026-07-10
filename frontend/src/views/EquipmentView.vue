@@ -2,7 +2,12 @@
   <div>
     <div class="d-flex justify-space-between align-center mb-8">
       <h2 class="text-h4 font-weight-bold">設備管理</h2>
-      <v-btn color="red" prepend-icon="mdi-plus" elevation="2">
+      <v-btn
+        color="red"
+        prepend-icon="mdi-plus"
+        elevation="2"
+        @click="createDialog = true"
+      >
         新增設備
       </v-btn>
     </div>
@@ -126,18 +131,142 @@
       <v-card rounded="lg">
         <v-card-title class="text-h6 pa-6">確認刪除</v-card-title>
         <v-card-text class="px-6 pb-4">
-          確定要刪除設備「<strong>{{ selectedEquipment?.name }}</strong
-          >」嗎？此操作無法復原。
+          確定要刪除設備「<strong>{{ selectedEquipment?.name }}</strong>」嗎？此操作無法復原。
         </v-card-text>
         <v-card-actions class="pa-6 pt-0">
           <v-spacer />
           <v-btn variant="text" @click="deleteDialog = false">取消</v-btn>
-          <v-btn color="red" variant="flat" @click="handleDelete"
-            >確認刪除</v-btn
-          >
+          <v-btn color="red" variant="flat" @click="handleDelete">確認刪除</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <!-- 新增設備 Dialog -->
+    <v-dialog v-model="createDialog" max-width="600" persistent>
+      <v-card rounded="lg">
+        <v-card-title class="text-h6 pa-6 d-flex align-center">
+          <v-icon color="primary" class="mr-2">mdi-plus-circle-outline</v-icon>
+          新增設備
+        </v-card-title>
+
+        <v-divider />
+
+        <v-card-text class="pa-6">
+          <v-form ref="createFormRef">
+            <v-row>
+              <!-- 設備名稱 -->
+              <v-col cols="12">
+                <v-text-field
+                  v-model="createForm.name"
+                  label="設備名稱"
+                  placeholder="請輸入設備名稱"
+                  variant="outlined"
+                  :rules="[rules.required]"
+                  prepend-inner-icon="mdi-tools"
+                />
+              </v-col>
+
+              <!-- 設備類型 -->
+              <v-col cols="12" md="6">
+                <v-select
+                  v-model="createForm.type"
+                  :items="typeOptions"
+                  label="設備類型"
+                  variant="outlined"
+                  :rules="[rules.required]"
+                  prepend-inner-icon="mdi-shape-outline"
+                />
+              </v-col>
+
+              <!-- 設備狀態 -->
+              <v-col cols="12" md="6">
+                <v-select
+                  v-model="createForm.status"
+                  :items="statusOptions"
+                  item-title="label"
+                  item-value="value"
+                  label="設備狀態"
+                  variant="outlined"
+                  :rules="[rules.required]"
+                  prepend-inner-icon="mdi-list-status"
+                />
+              </v-col>
+
+              <!-- 序號 -->
+              <v-col cols="12" md="6">
+                <v-text-field
+                  v-model="createForm.serial_number"
+                  label="序號"
+                  placeholder="請輸入設備序號"
+                  variant="outlined"
+                  :rules="[rules.required]"
+                  prepend-inner-icon="mdi-barcode"
+                />
+              </v-col>
+
+              <!-- 位置 -->
+              <v-col cols="12" md="6">
+                <v-text-field
+                  v-model="createForm.location"
+                  label="位置"
+                  placeholder="請輸入設備位置"
+                  variant="outlined"
+                  :rules="[rules.required]"
+                  prepend-inner-icon="mdi-map-marker-outline"
+                />
+              </v-col>
+
+              <!-- 購買日期 -->
+              <v-col cols="12" md="6">
+                <v-text-field
+                  v-model="createForm.purchase_date"
+                  label="購買日期"
+                  placeholder="YYYY-MM-DD"
+                  variant="outlined"
+                  prepend-inner-icon="mdi-calendar-outline"
+                />
+              </v-col>
+
+              <!-- 設備描述 -->
+              <v-col cols="12">
+                <v-textarea
+                  v-model="createForm.description"
+                  label="設備描述"
+                  placeholder="請輸入設備相關描述"
+                  variant="outlined"
+                  rows="3"
+                  prepend-inner-icon="mdi-text"
+                />
+              </v-col>
+            </v-row>
+          </v-form>
+        </v-card-text>
+
+        <v-divider />
+
+        <v-card-actions class="pa-6">
+          <v-spacer />
+          <v-btn variant="outlined" class="mr-3" @click="closeCreateDialog">
+            取消
+          </v-btn>
+          <v-btn
+            color="primary"
+            variant="flat"
+            :loading="equipmentStore.loading"
+            prepend-icon="mdi-plus"
+            @click="handleCreate"
+          >
+            新增設備
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <!-- Snackbar -->
+    <v-snackbar v-model="snackbar" color="success" timeout="3000" location="top">
+      <v-icon class="mr-2">mdi-check-circle</v-icon>
+      {{ snackbarMessage }}
+    </v-snackbar>
   </div>
 </template>
 
@@ -238,6 +367,49 @@ const handleDelete = async () => {
   await equipmentStore.deleteEquipment(selectedEquipment.value.id);
   deleteDialog.value = false;
   selectedEquipment.value = null;
+};
+
+// 新增
+const createDialog = ref(false);
+const createFormRef = ref(null);
+const snackbar = ref(false);
+const snackbarMessage = ref("");
+
+const createForm = ref({
+  name: "",
+  type: null,
+  status: null,
+  serial_number: "",
+  location: "",
+  purchase_date: "",
+  description: "",
+});
+
+const rules = {
+  required: (v) => !!v || "此欄位為必填",
+};
+
+const closeCreateDialog = () => {
+  createDialog.value = false;
+  createFormRef.value?.reset();
+  createForm.value = {
+    name: "",
+    type: null,
+    status: null,
+    serial_number: "",
+    location: "",
+    purchase_date: "",
+    description: "",
+  };
+};
+
+const handleCreate = async () => {
+  const { valid } = await createFormRef.value.validate();
+  if (!valid) return;
+  await equipmentStore.createEquipment(createForm.value);
+  closeCreateDialog();
+  snackbarMessage.value = "設備已成功新增！";
+  snackbar.value = true;
 };
 
 const getStatusText = (status) =>
