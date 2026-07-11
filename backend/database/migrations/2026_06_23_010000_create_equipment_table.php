@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('name', 150);
             $table->string('type', 100);
             $table->string('serial_number', 50)->unique();
-            $table->string('status', 30)->default('active'); // active / maintenance / broken
+            $table->string('status', 30)->default('active');
             $table->string('location', 150);
             $table->date('purchase_date')->nullable();
             $table->text('description')->nullable();
