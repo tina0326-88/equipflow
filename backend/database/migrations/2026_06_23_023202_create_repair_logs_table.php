@@ -6,26 +6,18 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('repair_logs', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('repair_id');
-            $table->unsignedBigInteger('user_id');
+            $table->foreignId('repair_id')->constrained('repairs')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('action', 100);
             $table->text('note')->nullable();
             $table->timestamp('created_at')->nullable();
-
-            $table->foreign('repair_id')->references('id')->on('repairs')->onDelete('cascade');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('repair_logs');

@@ -34,13 +34,21 @@ class User extends Authenticatable
         ];
     }
 
+    // 負責的報修單
     public function repairs()
     {
         return $this->hasMany(Repair::class, 'reported_by');
     }
 
+    // 指派的報修單
     public function assignedRepairs()
     {
         return $this->hasMany(Repair::class, 'assigned_to');
+    }
+
+    // 操作紀錄
+    public function repairLogs()
+    {
+        return $this->hasMany(RepairLog::class);
     }
 }

@@ -2,83 +2,90 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\ApiResponse;
 use App\Models\Equipment;
 use Illuminate\Http\Request;
 
 class EquipmentController extends Controller
 {
+    // 取得設備列表
     public function index(Request $request)
     {
         $query = Equipment::query();
 
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('type', 'like', "%{$search}%")
-                  ->orWhere('location', 'like', "%{$search}%")
-                  ->orWhere('serial_number', 'like', "%{$search}%");
+        if ($request->search) {
+            $query->where(function ($q) use ($request) {
+                $q->where('name', 'like', "%{$request->search}%")
+                  ->orWhere('serial_number', 'like', "%{$request->search}%")
+                  ->orWhere('location', 'like', "%{$request->search}%");
             });
         }
 
-        if ($request->filled('status')) {
+        if ($request->status) {
             $query->where('status', $request->status);
         }
 
-        $equipment = $query->latest()->get();
-
-        return ApiResponse::success($equipment);
+        return response()->json($query->paginate(10));
     }
 
+    // 取得單一設備
     public function show($id)
     {
         $equipment = Equipment::findOrFail($id);
-
-        return ApiResponse::success($equipment);
+        return response()->json($equipment);
     }
 
+    // 新增設備
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'name'          => 'required|string|max:150',
             'type'          => 'required|string|max:100',
-            'serial_number' => 'required|string|max:50|unique:equipment,serial_number',
-            'status'        => 'in:active,maintenance,broken',
+            'serial_number' => 'required|string|max:50|unique:equipment',
+            'status'        => 'required|in:active,maintenance,broken',
             'location'      => 'required|string|max:150',
             'purchase_date' => 'nullable|date',
             'description'   => 'nullable|string',
         ]);
 
-        $equipment = Equipment::create($validated);
+        $equipment = Equipment::create($request->all());
 
-        return ApiResponse::success($equipment, '設備已新增');
+        return response()->json([
+            'message'   => '設備新增成功',
+            'equipment' => $equipment,
+        ], 201);
     }
 
+    // 更新設備
     public function update(Request $request, $id)
     {
         $equipment = Equipment::findOrFail($id);
 
-        $validated = $request->validate([
-            'name'          => 'sometimes|string|max:150',
-            'type'          => 'sometimes|string|max:100',
-            'serial_number' => "sometimes|string|max:50|unique:equipment,serial_number,{$id}",
-            'status'        => 'sometimes|in:active,maintenance,broken',
-            'location'      => 'sometimes|string|max:150',
+        $request->validate([
+            'name'          => 'string|max:150',
+            'type'          => 'string|max:100',
+            'serial_number' => 'string|max:50|unique:equipment,serial_number,' . $id,
+            'status'        => 'in:active,maintenance,broken',
+            'location'      => 'string|max:150',
             'purchase_date' => 'nullable|date',
             'description'   => 'nullable|string',
         ]);
 
-        $equipment->update($validated);
+        $equipment->update($request->all());
 
-        return ApiResponse::success($equipment, '設備已更新');
+        return response()->json([
+            'message'   => '設備更新成功',
+            'equipment' => $equipment,
+        ]);
     }
 
+    // 刪除設備
     public function destroy($id)
     {
         $equipment = Equipment::findOrFail($id);
         $equipment->delete();
 
-        return ApiResponse::success(null, '設備已刪除');
+        return response()->json([
+            'message' => '設備刪除成功',
+        ]);
     }
 }
