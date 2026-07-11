@@ -63,11 +63,11 @@
 
 ## 系統架構圖
 
-<img width="663" height="1975" alt="EquipFlow-2" src="https://github.com/user-attachments/assets/69195eec-0758-41b2-ad10-38ecbf297d83" />
+<img width="663" height="1975" alt="EquipFlow-2" src="https://github.com/user-attachments/assets/9af4b92c-f77a-47b1-8fb4-dcccd7ddbf0b" />
 
 ## 資料模型
 
-<img width="1085" height="806" alt="EquipFlow" src="https://github.com/user-attachments/assets/94425682-e18e-4b40-abaa-c6d5423f8a8e" />
+<img width="1085" height="806" alt="EquipFlow" src="https://github.com/user-attachments/assets/145329fc-bf85-4459-8705-c09c5c6c5040" />
 
 ### Users（使用者）
 
