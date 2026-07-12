@@ -58,7 +58,7 @@
 
 ## 系統架構圖
 
-<img width="663" height="1975" alt="EquipFlow-2" src="https://github.com/user-attachments/assets/9af4b92c-f77a-47b1-8fb4-dcccd7ddbf0b" />
+<img width="2720" height="2488" alt="equipflow_system_architecture" src="https://github.com/user-attachments/assets/0ca9d567-6dfa-4f5c-a201-3a5bb7b0263a" />
 
 ## 資料模型
 
