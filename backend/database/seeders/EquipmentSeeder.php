@@ -9,7 +9,7 @@ class EquipmentSeeder extends Seeder
 {
     public function run(): void
     {
-        $items = [
+        $equipments = [
             [
                 'name'          => '3樓會議室空調',
                 'type'          => '空調',
@@ -66,8 +66,8 @@ class EquipmentSeeder extends Seeder
             ],
         ];
 
-        foreach ($items as $item) {
-            Equipment::create($item);
+        foreach ($equipments as $equipment) {
+            Equipment::create($equipment);
         }
     }
 }
