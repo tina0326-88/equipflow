@@ -111,7 +111,7 @@ export const useRepairStore = defineStore("repair", () => {
   const repairs = ref([]);
   const loading = ref(false);
   const error = ref(null);
-  const useMock = ref(true); // 切換 Mock 模式
+  const useMock = ref(false); // 切換 Mock 模式
 
   // Getters
   const totalRepairs = computed(() => repairs.value.length);
