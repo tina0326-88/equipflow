@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Repair;
-use App\Models\RepairLog;
 use Illuminate\Database\Seeder;
 
 class RepairSeeder extends Seeder
@@ -17,9 +16,9 @@ class RepairSeeder extends Seeder
                 'description'  => '3樓會議室空調運作時有異常噪音',
                 'status'       => 'pending',
                 'priority'     => 'high',
-                'reported_by'  => 1,
+                'reported_by'  => 2,
                 'assigned_to'  => null,
-                'reported_at'  => now()->subDays(1),
+                'reported_at'  => now()->subDays(4),
                 'completed_at' => null,
             ],
             [
@@ -41,8 +40,8 @@ class RepairSeeder extends Seeder
                 'priority'     => 'high',
                 'reported_by'  => 1,
                 'assigned_to'  => 3,
-                'reported_at'  => now()->subDays(3),
-                'completed_at' => now()->subDays(2),
+                'reported_at'  => now()->subDays(5),
+                'completed_at' => now()->subDays(3),
             ],
             [
                 'equipment_id' => 4,
@@ -52,7 +51,7 @@ class RepairSeeder extends Seeder
                 'priority'     => 'high',
                 'reported_by'  => 2,
                 'assigned_to'  => null,
-                'reported_at'  => now()->subHours(5),
+                'reported_at'  => now()->subDays(1),
                 'completed_at' => null,
             ],
             [
@@ -61,43 +60,15 @@ class RepairSeeder extends Seeder
                 'description'  => '4樓網路交換器頻繁斷線',
                 'status'       => 'processing',
                 'priority'     => 'medium',
-                'reported_by'  => 3,
-                'assigned_to'  => 2,
-                'reported_at'  => now()->subHours(3),
+                'reported_by'  => 1,
+                'assigned_to'  => 3,
+                'reported_at'  => now()->subDays(1),
                 'completed_at' => null,
             ],
         ];
 
-        foreach ($repairs as $data) {
-            $repair = Repair::create($data);
-
-            RepairLog::create([
-                'repair_id'  => $repair->id,
-                'user_id'    => $data['reported_by'],
-                'action'     => '建立報修單',
-                'note'       => $data['description'],
-                'created_at' => $data['reported_at'],
-            ]);
-
-            if ($data['assigned_to']) {
-                RepairLog::create([
-                    'repair_id'  => $repair->id,
-                    'user_id'    => $data['assigned_to'],
-                    'action'     => '指派處理',
-                    'note'       => '已指派維修人員',
-                    'created_at' => (clone $data['reported_at'])->addHour(),
-                ]);
-            }
-
-            if ($data['status'] === 'done') {
-                RepairLog::create([
-                    'repair_id'  => $repair->id,
-                    'user_id'    => $data['assigned_to'],
-                    'action'     => '完成報修',
-                    'note'       => '問題已排除，設備恢復正常',
-                    'created_at' => $data['completed_at'],
-                ]);
-            }
+        foreach ($repairs as $repair) {
+            Repair::create($repair);
         }
     }
 }
