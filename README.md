@@ -1,6 +1,6 @@
 # 設備報修管理系統 EquipFlow
 
-[![Vue 3](https://img.shields.io/badge/Vue%203-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white)](https://vuejs.org/) [![Vuetify](https://img.shields.io/badge/Vuetify-1867C0?style=for-the-badge&logo=vuetify&logoColor=white)](https://vuetifyjs.com/) [![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://www.php.net/) [![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com/) [![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/) [![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+[![Vue 3](https://img.shields.io/badge/Vue%203-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white)](https://vuejs.org/) [![Vuetify](https://img.shields.io/badge/Vuetify-1867C0?style=for-the-badge&logo=vuetify&logoColor=white)](https://vuetifyjs.com/) [![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://www.php.net/) [![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com/) [![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)](https://www.sqlite.org/)
 
 ## 專案簡介
 
@@ -11,7 +11,6 @@
 - 前後端完全分離架構
 - Vue 3 Composition API + Pinia 狀態管理
 - Laravel RESTful API
-- Docker 容器化部署支援
 - 響應式現代化 UI
 
 ## 核心功能
@@ -53,13 +52,9 @@
 ### Backend
 
 - PHP 8.2+
-- Laravel 10/11
-- MySQL
-- RESTful API
-
-### 部署工具
-
-- Docker + Docker Compose
+- Laravel 11
+- SQLite（開發環境）
+- RESTful API + Laravel Sanctum 認證
 
 ## 系統架構圖
 
@@ -180,14 +175,33 @@ equipflow/                          # 專案根目錄
 │   ├── app/
 │   │   ├── Http/
 │   │   │   ├── Controllers/        # API 控制器
+│   │   │   │   ├── AuthController.php
+│   │   │   │   ├── EquipmentController.php
+│   │   │   │   ├── RepairController.php
+│   │   │   │   ├── RepairLogController.php
+│   │   │   │   └── DashboardController.php
 │   │   │   ├── Requests/           # 表單驗證
 │   │   │   └── Middleware/
 │   │   ├── Models/                 # Eloquent Model
+│   │   │   ├── User.php
+│   │   │   ├── Equipment.php
+│   │   │   ├── Repair.php
+│   │   │   └── RepairLog.php
 │   │   ├── Services/               # 商業邏輯
 │   │   └── Providers/
 │   ├── database/
 │   │   ├── migrations/             # 資料表遷移
-│   │   └── seeders/                # 測試資料
+│   │   │   ├── create_users_table.php
+│   │   │   ├── create_equipment_table.php
+│   │   │   ├── create_repairs_table.php
+│   │   │   └── create_repair_logs_table.php
+│   │   ├── seeders/                # 測試資料
+│   │   │   ├── DatabaseSeeder.php
+│   │   │   ├── UserSeeder.php
+│   │   │   ├── EquipmentSeeder.php
+│   │   │   ├── RepairSeeder.php
+│   │   │   └── RepairLogSeeder.php
+│   │   └── database.sqlite         # SQLite 資料庫檔案
 │   ├── routes/
 │   │   └── api.php                 # API 路由
 │   ├── tests/
@@ -235,7 +249,7 @@ equipflow/                          # 專案根目錄
 │   │   │
 │   │   ├── utils/                  # 工具函式
 │   │   │   ├── formatData.js
-│   │   │   └── statusColor.js
+│   │   │   └── statuscolor.js
 │   │   │
 │   │   ├── views/                  # 頁面元件
 │   │   │   ├── DashboardView.vue
@@ -254,17 +268,11 @@ equipflow/                          # 專案根目錄
 │   ├── package.json
 │   └── vue.config.js
 │
-├── docker-compose.yml              # Docker 部署設定
 ├── README.md
 └── .gitignore
 ```
 
 ## Git 分支規範
-
-### 主要分支
-
-- main - 正式穩定版本
-- develop - 開發整合分支
 
 ### 分支命名規範
 
@@ -276,23 +284,6 @@ equipflow/                          # 專案根目錄
 | `bugfix/`   | `bugfix/repair-list-error` | Bug 修正與問題排除         |
 
 ## 安裝與執行
-
-### 使用 Docker
-
-```
-# 1. Clone 專案
-git clone https://github.com/tinachen0326/equipflow.git
-cd equipflow
-
-# 2. 啟動所有服務
-docker-compose up -d --build
-```
-
-啟動後的存取位址：
-
-- 前端：http://localhost:8080
-- 後端 API：http://localhost:8000
-- phpMyAdmin（資料庫管理）：http://localhost:8081
 
 ### 前端獨立執行
 
@@ -319,11 +310,21 @@ composer install
 # 複製環境設定檔
 cp .env.example .env
 
+# 修改 .env 設定 SQLite
+# DB_CONNECTION=sqlite
+
+# 建立 SQLite 檔案
+touch database/database.sqlite
+
 # 產生應用程式金鑰
 php artisan key:generate
 
+# 安裝 Sanctum
+composer require laravel/sanctum
+php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
+
 # 建立資料庫與測試資料
-php artisan migrate --seed
+php artisan migrate:fresh --seed
 
 # 啟動 Laravel 開發伺服器
 php artisan serve
@@ -346,6 +347,11 @@ php artisan serve
 cd frontend
 npm run serve
 ```
+
+- 啟動後的存取位址：
+
+前端：http://localhost:8080
+後端 API：http://localhost:8000
 
 ## 版權聲明
 
