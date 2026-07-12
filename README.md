@@ -1,6 +1,6 @@
 # 設備報修管理系統 EquipFlow
 
-[![Vue 3](https://img.shields.io/badge/Vue%203-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white)](https://vuejs.org/) [![Vuetify](https://img.shields.io/badge/Vuetify-1867C0?style=for-the-badge&logo=vuetify&logoColor=white)](https://vuetifyjs.com/) [![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://www.php.net/) [![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com/) [![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)](https://www.sqlite.org/) [![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+[![Vue 3](https://img.shields.io/badge/Vue%203-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white)](https://vuejs.org/) [![Vuetify](https://img.shields.io/badge/Vuetify-1867C0?style=for-the-badge&logo=vuetify&logoColor=white)](https://vuetifyjs.com/) [![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://www.php.net/) [![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com/) [![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)](https://www.sqlite.org/)
 
 ## 專案簡介
 
@@ -11,7 +11,6 @@
 - 前後端完全分離架構
 - Vue 3 Composition API + Pinia 狀態管理
 - Laravel RESTful API
-- Docker 容器化部署支援
 - 響應式現代化 UI
 
 ## 核心功能
@@ -53,13 +52,9 @@
 ### Backend
 
 - PHP 8.2+
-- Laravel 10/11
-- MySQL
-- RESTful API
-
-### 部署工具
-
-- Docker + Docker Compose
+- Laravel 11
+- SQLite（開發環境）
+- RESTful API + Laravel Sanctum 認證
 
 ## 系統架構圖
 
@@ -279,11 +274,6 @@ equipflow/                          # 專案根目錄
 
 ## Git 分支規範
 
-### 主要分支
-
-- main - 正式穩定版本
-- develop - 開發整合分支
-
 ### 分支命名規範
 
 | 分支前綴    | 範例                       | 使用說明                   |
@@ -294,23 +284,6 @@ equipflow/                          # 專案根目錄
 | `bugfix/`   | `bugfix/repair-list-error` | Bug 修正與問題排除         |
 
 ## 安裝與執行
-
-### 使用 Docker
-
-```
-# 1. Clone 專案
-git clone https://github.com/tinachen0326/equipflow.git
-cd equipflow
-
-# 2. 啟動所有服務
-docker-compose up -d --build
-```
-
-啟動後的存取位址：
-
-- 前端：http://localhost:8080
-- 後端 API：http://localhost:8000
-- phpMyAdmin（資料庫管理）：http://localhost:8081
 
 ### 前端獨立執行
 
@@ -376,6 +349,7 @@ npm run serve
 ```
 
 - 啟動後的存取位址：
+
 前端：http://localhost:8080
 後端 API：http://localhost:8000
 
