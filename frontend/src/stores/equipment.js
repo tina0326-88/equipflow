@@ -70,7 +70,7 @@ export const useEquipmentStore = defineStore("equipment", () => {
   const equipments = ref([]);
   const loading = ref(false);
   const error = ref(null);
-  const useMock = ref(true);
+  const useMock = ref(false);
 
   // Getters
   const totalEquipments = computed(() => equipments.value.length);
